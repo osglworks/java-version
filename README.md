@@ -1,14 +1,12 @@
-# OSGL Bootstrap
+# OSGL Version
 
 [![APL v2](https://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) 
-[![Maven Central](https://img.shields.io/maven-central/v/org.osgl/osgl-bootstrap.svg)](http://search.maven.org/#search%7Cga%7C1%7Cosgl-bootstrap)
-[![Build Status](https://travis-ci.org/osglworks/java-osgl-bootstrap.svg?branch=master)](https://travis-ci.org/osglworks/java-osgl-bootstrap)
-[![codecov](https://codecov.io/gh/osglworks/java-osgl-bootstrap/branch/master/graph/badge.svg)](https://codecov.io/gh/osglworks/java-osgl-bootstrap)
-[![Javadocs](http://www.javadoc.io/badge/org.osgl/osgl-bootstrap.svg?color=red)](http://www.javadoc.io/doc/org.osgl/osgl-bootstrap)
+[![Maven Central](https://img.shields.io/maven-central/v/org.osgl/osgl-version.svg)](http://search.maven.org/#search%7Cga%7C1%7Cosgl-version)
+[![Build Status](https://travis-ci.org/osglworks/java-version.svg?branch=master)](https://travis-ci.org/osglworks/java-version)
+[![codecov](https://codecov.io/gh/osglworks/java-version/branch/master/graph/badge.svg)](https://codecov.io/gh/osglworks/java-version)
+[![Javadocs](http://www.javadoc.io/badge/org.osgl/osgl-version.svg?color=red)](http://www.javadoc.io/doc/org.osgl/osgl-version)
 
-A minimum set of utilities required by all other OSGL Java libraries
-
-* Version tool: allow OSGL library and any other Java app to create a runtime version info based on their maven build
+A simple tool to prepare version information when building application/library plus access version information at runtime
 
 ## Installation
 
@@ -17,12 +15,12 @@ Add the following dependency into your `pom.xml` file:
 ```xml
 <dependency>
     <groupId>org.osgl</groupId>
-    <artifactId>osgl-bootstrap</artifactId>
-    <version>${osgl-bootstrap-version}</version>
+    <artifactId>osgl-version</artifactId>
+    <version>${osgl-version.version}</version>
 </dependency>
 ```
 
-## [Version tool]Prepare version info
+## Prepare version info
 
 For library/app author, you need to prepare your version info so that Version tool can generate version at runtime. 
 
@@ -63,7 +61,7 @@ Where the `${project.artifactId}` and `${project.version}` comes from standard m
 </resources>
 ```
 
-## [Version tool]Get version info at runtime
+## Get version info at runtime
 
 Once you have prepared your `.version` file and packaged it into the jar file, the user of the jar file can always access the version information through simple API call:
 
