@@ -37,10 +37,10 @@ import java.lang.annotation.Target;
  * static final field of type `osgl.version.Version` and name `VERSION`,
  * for example:
  *
- * ```
+ * ```java
  * package org.mrcool.swissknife;
  *
- * {@literal @}Versioned
+ * .@Versioned
  * public class SwissKnife {
  *     // keep track the version of swissknife library
  *     public static final Version VERSION = Version.of(SwissKnife.class);

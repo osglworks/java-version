@@ -65,7 +65,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  * **Note** don't forget to set resource filter in the library's `pom.xml` file:
  *
- * ```
+ * ```xml
  * <resources>
  *   <resource>
  *     <directory>src/main/resources</directory>
@@ -115,14 +115,15 @@ public final class Version implements Serializable {
      */
     public static final Version UNKNOWN = new Version("", UNKNOWN_STR, UNKNOWN_STR, null);
 
-    /**
-     * Keep track the version of osgl-version library
-     */
-    public static final Version VERSION = Version.of(Version.class);
-
     private static Logger logger = LoggerFactory.getLogger(Version.class);
 
     private static final ConcurrentMap<String, Version> cache = new ConcurrentHashMap<String, Version>();
+
+
+    /**
+     * Keep track the version of osgl-version library.
+     */
+    public static final Version VERSION = Version.of(Version.class);
 
     private final String artifactId;
     private final String packageName;

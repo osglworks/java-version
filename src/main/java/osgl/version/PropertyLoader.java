@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * A helper class that load properties file from resource
+ */
 class PropertyLoader {
 
     static PropertyLoader INSTANCE = new PropertyLoader();
