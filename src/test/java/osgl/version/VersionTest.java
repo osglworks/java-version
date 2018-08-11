@@ -250,4 +250,31 @@ public class VersionTest extends Assert {
         Version v2 = (Version) ois.readObject();
         assertEquals(v1, v2);
     }
+
+    @Before
+    public void clearVariableFoundWarnSuppressSetting() {
+        System.clearProperty(Version.PROP_SUPPRESS_VAR_FOUND_WARNING);
+    }
+
+    @Test
+    public void itShallNotWarnIfNoVariablesFoundInVersion() {
+        assertFalse(Version.shouldWarnIfVariableFoundIn("foo-1.0.0"));
+    }
+
+    @Test
+    public void itShallWarnIfVariablesFoundInVersionSuppressedIsNotSet() {
+        assertTrue(Version.shouldWarnIfVariableFoundIn("foo-${project.version}"));
+    }
+
+    @Test
+    public void itShallNotWarnIfVariablesFoundInVersionSuppressedIsSet() {
+        System.setProperty(Version.PROP_SUPPRESS_VAR_FOUND_WARNING, "true");
+        assertFalse(Version.shouldWarnIfVariableFoundIn("foo-${project.version}"));
+    }
+
+    @Test
+    public void itShallNotWarnIfVariablesFoundInVersionSuppressedIsSetAsYes() {
+        System.setProperty(Version.PROP_SUPPRESS_VAR_FOUND_WARNING, "yes");
+        assertFalse(Version.shouldWarnIfVariableFoundIn("foo-${project.version}"));
+    }
 }

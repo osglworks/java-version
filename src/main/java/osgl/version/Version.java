@@ -97,12 +97,10 @@ import java.util.concurrent.ConcurrentMap;
 public final class Version implements Serializable {
 
     /**
-     * Once this is set to `true`, it will not warn if
-     * it detect variables in version string.
-     *
-     * Default value is `false`
+     * The system property name used to check if it should
+     * suppress warning when variables found in version string
      */
-    public static boolean suppressVariableFoundWarning;
+    public static String PROP_SUPPRESS_VAR_FOUND_WARNING = "osgl.version.suppress-var-found-warning";
 
     /**
      * The string literal `unknown`.
@@ -444,10 +442,22 @@ public final class Version implements Serializable {
         if (null == s) {
             return null;
         }
-        if (!suppressVariableFoundWarning && s.contains("${")) {
+        if (shouldWarnIfVariableFoundIn(s)) {
             logger.warn("variable found in .version file for %s. please make sure your resource has been filtered", pkg);
         }
         return s;
+    }
+
+    static boolean shouldWarnIfVariableFoundIn(String version) {
+        if (!version.contains("${")) {
+            return false;
+        }
+        String s = System.getProperty(PROP_SUPPRESS_VAR_FOUND_WARNING);
+        if (null == s) {
+            return true;
+        }
+        s = s.trim().toLowerCase();
+        return !("true".equalsIgnoreCase(s) || "yes".equalsIgnoreCase(s));
     }
 
 }
