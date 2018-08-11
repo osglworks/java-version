@@ -20,7 +20,7 @@
 
   <artifactId>osgl-version</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-BETA-3</version>
+  <version>2.0.0-BETA-4-SNAPSHOT</version>
 
   <name>OSGL Version</name>
   <description>Provides utilities supporting library/app version info access at runtime</description>
