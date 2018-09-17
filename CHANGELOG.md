@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0-BETA-4 (2018-09-18)
+* Incorrect placeholder in log message found in osgl-version #3
+
 ## 2.0.0-BETA-3 (2018-08-17)
 * Use system property to configure suppress variable found warning #2
 

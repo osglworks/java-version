@@ -381,12 +381,12 @@ public final class Version implements Serializable {
     private static Version loadFrom(Properties properties, String packageName) {
         String artifactId = properties.getProperty("artifact");
         if (isBlank(artifactId)) {
-            logger.warn("artifact not defined in .version file: %s", packageName);
+            logger.warn("artifact not defined in .version file: " + packageName);
             artifactId = packageName;
         }
         String projectVersion = properties.getProperty("version");
         if (isBlank(projectVersion)) {
-            logger.error("version not defined in .version file: %s", packageName);
+            logger.error("version not defined in .version file: " + packageName);
             return UNKNOWN;
         }
         String buildNumber = properties.getProperty("build");
@@ -443,7 +443,7 @@ public final class Version implements Serializable {
             return null;
         }
         if (shouldWarnIfVariableFoundIn(s)) {
-            logger.warn("variable found in .version file for %s. please make sure your resource has been filtered", pkg);
+            logger.warn("variable found in .version file for {}. please make sure your resource has been filtered", pkg);
         }
         return s;
     }
