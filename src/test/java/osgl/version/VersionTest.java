@@ -145,9 +145,8 @@ public class VersionTest extends Assert {
         assertEquals(pkg, v.getArtifactId());
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> messageArgCaptor = ArgumentCaptor.forClass(Object.class);
-        Mockito.verify(logger, Mockito.times(1)).warn(messageCaptor.capture(), messageArgCaptor.capture());
-        assertTrue(messageCaptor.getValue().contains("artifact not defined in .version file"));
-        assertTrue(messageArgCaptor.getValue().toString().equals("org.demo.badversion.noart"));
+        Mockito.verify(logger, Mockito.times(1)).warn(messageCaptor.capture());
+        assertTrue(messageCaptor.getValue().contains("artifact not defined in .version file: org.demo.badversion.noart"));
     }
 
     @Test
@@ -155,9 +154,8 @@ public class VersionTest extends Assert {
         assertSame(Version.UNKNOWN, Version.ofPackage("org.demo.badversion.noversion"));
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> messageArgCaptor = ArgumentCaptor.forClass(Object.class);
-        Mockito.verify(logger, Mockito.times(1)).error(messageCaptor.capture(), messageArgCaptor.capture());
-        assertTrue(messageCaptor.getValue().contains("version not defined in .version file"));
-        assertTrue(messageArgCaptor.getValue().toString().equals("org.demo.badversion.noversion"));
+        Mockito.verify(logger, Mockito.times(1)).error(messageCaptor.capture());
+        assertTrue(messageCaptor.getValue().contains("version not defined in .version file: org.demo.badversion.noversion"));
     }
 
     @Test
@@ -178,7 +176,7 @@ public class VersionTest extends Assert {
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> messageArgCaptor = ArgumentCaptor.forClass(Object.class);
         Mockito.verify(logger, Mockito.times(3)).warn(messageCaptor.capture(), messageArgCaptor.capture());
-        assertTrue(messageCaptor.getValue().contains("variable found in .version file for %s"));
+        assertTrue(messageCaptor.getValue().contains("variable found in .version file for {}"));
         assertTrue(messageArgCaptor.getValue().toString().equals("net.tab"));
     }
 
