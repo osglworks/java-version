@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0-BETA-4-JAVA7 (2018-10-30)
+* Provide Java7 support
+
 ## 2.0.0-BETA-4 (2018-09-18)
 * Incorrect placeholder in log message found in osgl-version #3
 
