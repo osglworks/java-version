@@ -177,7 +177,16 @@ public class VersionTest extends Assert {
         ArgumentCaptor<Object> messageArgCaptor = ArgumentCaptor.forClass(Object.class);
         Mockito.verify(logger, Mockito.times(3)).warn(messageCaptor.capture(), messageArgCaptor.capture());
         assertTrue(messageCaptor.getValue().contains("variable found in .version file for {}"));
-        assertTrue(messageArgCaptor.getValue().toString().equals("net.tab"));
+        assertEquals("net.tab", messageArgCaptor.getValue().toString());
+    }
+
+    @Test
+    public void itShallReturnJavaPackageVersionInfoIfPresented() {
+        Package pkg = String.class.getPackage();
+        String pkgImplVersion = pkg.getImplementationVersion();
+        Version version = Version.of(String.class);
+        assertTrue(pkgImplVersion.contains(version.getProjectVersion()));
+        assertTrue(pkgImplVersion.contains(version.getBuildNumber()));
     }
 
     @Test
@@ -194,8 +203,8 @@ public class VersionTest extends Assert {
     @Test
     public void equalToNullOrNonVersionObjectShouldBeFalse() {
         Version version = new Version("com.bar","foo", "1.0", "a12f");
-        assertFalse(version.equals(null));
-        assertFalse(version.equals(new Object()));
+        assertNotEquals(null, version);
+        assertNotEquals(version, new Object());
     }
 
     @Test

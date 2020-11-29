@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0-BETA-5 (2020-09-17)
+
+
 ## 2.0.0-BETA-4 (2018-09-18)
 * Incorrect placeholder in log message found in osgl-version #3
 

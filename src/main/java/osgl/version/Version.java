@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -92,6 +93,13 @@ import java.util.concurrent.ConcurrentMap;
  * System.out.println(swissKnifeVersion.getVersion()); // print `r1.0-ebf1`
  * System.out.println(swissKnifeVersion); // print `swissknife-r1.0-ebf1`
  * ```
+ *
+ * ### 2.1 Retrieve the version info when `.version` file does not exist
+ *
+ * In case there is no `.version` file found for a package/class, then it would try to use
+ * the package's implementation version or specification version to construct the osgl version.
+ * Refer to
+ * [Package Versioning specification](https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp89936)
  */
 @Versioned
 public final class Version implements Serializable {
@@ -121,10 +129,10 @@ public final class Version implements Serializable {
      */
     public static final Version UNKNOWN = new Version("", UNKNOWN_STR, UNKNOWN_STR, null);
 
+    // DO NOT MAKE THIS FINAL - for unit test purpose
     private static Logger logger = LoggerFactory.getLogger(Version.class);
 
     private static final ConcurrentMap<String, Version> cache = new ConcurrentHashMap<String, Version>();
-
 
     /**
      * Keep track the version of osgl-version library.
@@ -248,16 +256,12 @@ public final class Version implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = artifactId.hashCode();
-        result = 31 * result + packageName.hashCode();
-        result = 31 * result + versionTag.hashCode();
-        return result;
+        return Objects.hash(artifactId, packageName, versionTag);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(artifactId).append("-").append(getVersion());
-        return sb.toString();
+        return artifactId + "-" + getVersion();
     }
 
     /**
@@ -303,6 +307,8 @@ public final class Version implements Serializable {
      * @see #ofPackage(String)
      */
     public static Version of(Class<?> clazz) {
+        Package pkg = clazz.getPackage();
+        if (null != pkg) return of(pkg);
         String className = clazz.getName();
         int pos = className.lastIndexOf('.');
         if (pos < 0) {
@@ -322,6 +328,14 @@ public final class Version implements Serializable {
      * @see #ofPackage(String)
      */
     public static Version of(Package pkg) {
+        String pkgName = pkg.getName();
+        Version v = cache.get(pkgName);
+        if (null != v) return v;
+        Version version = loadVersionFromJdkPackage(pkg);
+        if (null != version && UNKNOWN != version) {
+            cache.put(pkgName, version);
+            return version;
+        }
         return of_(pkg.getName());
     }
 
@@ -350,6 +364,37 @@ public final class Version implements Serializable {
      */
     static void clearCache() {
         cache.clear();
+    }
+
+    private static Version loadVersionFromJdkPackage(Package pkg) {
+        if (null == pkg) return UNKNOWN;
+        String version = pkg.getImplementationVersion();
+        if (null == version) {
+            version = pkg.getSpecificationVersion();
+        }
+        if (null == version) {
+            return UNKNOWN;
+        }
+        int pos = version.indexOf('-');
+        if (pos < 0) {
+            pos = version.indexOf('_');
+        }
+        String projectVersion = version;
+        String buildNumber = null;
+        if (pos > 0) {
+            projectVersion = version.substring(0, pos);
+            buildNumber = version.substring(pos + 1);
+        }
+        Version osglVersion = loadFromResource(pkg.getName());
+        String artifactId = null != osglVersion ? osglVersion.artifactId : pkg.getImplementationTitle();
+        if (null == artifactId) {
+            artifactId = pkg.getName();
+        }
+        return new Version(pkg.getName(), artifactId, projectVersion, buildNumber);
+    }
+
+    private static Version of_(Package pkg) {
+        throw new RuntimeException("");
     }
 
     private static Version of_(String packageName) {
