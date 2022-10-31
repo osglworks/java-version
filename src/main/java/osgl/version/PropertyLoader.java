@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * A helper class that load properties file from resource
+ * A helper class that load properties file from resource.
  */
 class PropertyLoader {
 

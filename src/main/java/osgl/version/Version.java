@@ -9,9 +9,9 @@ package osgl.version;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 /**
  * Describe the **version** of a specific Java delivery (app or library).
  *
@@ -68,10 +67,10 @@ import java.util.concurrent.ConcurrentMap;
  *
  * ```xml
  * <resources>
- *   <resource>
- *     <directory>src/main/resources</directory>
- *     <filtering>true</filtering>
- *    </resource>
+ * <resource>
+ * <directory>src/main/resources</directory>
+ * <filtering>true</filtering>
+ * </resource>
  * </resources>
  * ```
  *
@@ -101,14 +100,14 @@ import java.util.concurrent.ConcurrentMap;
  * Refer to
  * [Package Versioning specification](https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp89936)
  */
+
 @Versioned
 public final class Version implements Serializable {
 
     /**
-     * The system property name used to check if it should
-     * suppress warning when variables found in version string
+     * System property name used to check if it should suppress warning when variables found in version string.
      */
-    public static String PROP_SUPPRESS_VAR_FOUND_WARNING = "osgl.version.suppress-var-found-warning";
+    public static final String PROP_SUPPRESS_VAR_FOUND_WARNING = "osgl.version.suppress-var-found-warning";
 
     /**
      * The string literal `unknown`.
@@ -130,7 +129,7 @@ public final class Version implements Serializable {
     public static final Version UNKNOWN = new Version("", UNKNOWN_STR, UNKNOWN_STR, null);
 
     // DO NOT MAKE THIS FINAL - for unit test purpose
-    private static Logger logger = LoggerFactory.getLogger(Version.class);
+    private static final Logger logger = LoggerFactory.getLogger(Version.class);
 
     private static final ConcurrentMap<String, Version> cache = new ConcurrentHashMap<String, Version>();
 
@@ -149,14 +148,10 @@ public final class Version implements Serializable {
      * Construct a `Version` instance with packageName, artifactId,
      * projectVersion and buildName.
      *
-     * @param packageName
-     *      the package name
-     * @param artifactId
-     *      the artifact id
-     * @param projectVersion
-     *      the project version
-     * @param buildNumber
-     *      the build number
+     * @param packageName    the package name
+     * @param artifactId     the artifact id
+     * @param projectVersion the project version
+     * @param buildNumber    the build number
      */
     public Version(String packageName, String artifactId, String projectVersion, String buildNumber) {
         this.packageName = packageName;
@@ -168,6 +163,7 @@ public final class Version implements Serializable {
 
     /**
      * Returns artifact id, i.e. the name of the library or application
+     *
      * @return artifact id
      */
     public String getArtifactId() {
@@ -231,7 +227,7 @@ public final class Version implements Serializable {
 
     /**
      * Check if a `Version` instance is {@link #UNKNOWN}.
-     * 
+     *
      * @return `true` if this version is unknown or `false` otherwise
      */
     public boolean isUnknown() {
@@ -266,6 +262,7 @@ public final class Version implements Serializable {
 
     /**
      * Returns `Version` of the caller class.
+     *
      * @return the caller class version
      */
     public static Version get() {
@@ -278,7 +275,7 @@ public final class Version implements Serializable {
     /**
      * Returns a `Version` corresponding to the package name specified.
      *
-     * This method will tried to check if {@link #cache local cache} contains
+     * This method will try to check if {@link #cache local cache} contains
      * the package name first, and return the version instance mapped to the
      * package name in local cache, or if not found in local cache try to load
      * the `.version` file as a resource corresponding to the package name.
@@ -301,14 +298,15 @@ public final class Version implements Serializable {
      * Returns a `Version` of the library contains the class specified.
      *
      * @param clazz the class
-     * @return a `Version` for that class if provided or
-     * {@link #UNKNOWN} if not provided
+     * @return a `Version` for that class if provided or {@link #UNKNOWN} if not provided
      * @throws NullPointerException if the class specified is `null`
      * @see #ofPackage(String)
      */
     public static Version of(Class<?> clazz) {
         Package pkg = clazz.getPackage();
-        if (null != pkg) return of(pkg);
+        if (null != pkg) {
+            return of(pkg);
+        }
         String className = clazz.getName();
         int pos = className.lastIndexOf('.');
         if (pos < 0) {
@@ -322,15 +320,16 @@ public final class Version implements Serializable {
      * Returns a `Version` of the library contains the package specified.
      *
      * @param pkg the package
-     * @return a `Version` for the package if provided or
-     * {@link #UNKNOWN} if not provided
+     * @return a `Version` for the package if provided or {@link #UNKNOWN} if not provided
      * @throws NullPointerException if the class specified is `null`
      * @see #ofPackage(String)
      */
     public static Version of(Package pkg) {
         String pkgName = pkg.getName();
         Version v = cache.get(pkgName);
-        if (null != v) return v;
+        if (null != v) {
+            return v;
+        }
         Version version = loadVersionFromJdkPackage(pkg);
         if (null != version && UNKNOWN != version) {
             cache.put(pkgName, version);
@@ -345,10 +344,8 @@ public final class Version implements Serializable {
      * If project version is end with `-SNAPSHOT`, then prepend with `v`;
      * otherwise prepend with `r`
      *
-     * @param projectVersion
-     *      the project version
-     * @return
-     *      decorated project version
+     * @param projectVersion the project version
+     * @return decorated project version
      */
     static String decoratedProjectVersion(String projectVersion) {
         if (UNKNOWN_STR.equals(projectVersion)) {
@@ -367,7 +364,9 @@ public final class Version implements Serializable {
     }
 
     private static Version loadVersionFromJdkPackage(Package pkg) {
-        if (null == pkg) return UNKNOWN;
+        if (null == pkg) {
+            return UNKNOWN;
+        }
         String version = pkg.getImplementationVersion();
         if (null == version) {
             version = pkg.getSpecificationVersion();
@@ -488,7 +487,8 @@ public final class Version implements Serializable {
             return null;
         }
         if (shouldWarnIfVariableFoundIn(s)) {
-            logger.warn("variable found in .version file for {}. please make sure your resource has been filtered", pkg);
+            logger.warn("variable found in .version file for {}. please make sure your resource has been filtered",
+                    pkg);
         }
         return s;
     }
